@@ -1,0 +1,16 @@
+diff -up itext-2.1.5/src/core/com/lowagie/text/pdf/RandomAccessFileOrArray.java.pdftk itext-2.1.5/src/core/com/lowagie/text/pdf/RandomAccessFileOrArray.java
+--- itext-2.1.5/src/core/com/lowagie/text/pdf/RandomAccessFileOrArray.java.pdftk	2009-04-21 18:12:02.000000000 +0200
++++ itext-2.1.5/src/core/com/lowagie/text/pdf/RandomAccessFileOrArray.java	2009-04-21 18:17:08.000000000 +0200
+@@ -99,7 +99,11 @@ public class RandomAccessFileOrArray imp
+                 }
+             }
+             else {
+-                InputStream is = BaseFont.getResourceStream(filename);
++		InputStream is;
++		if( filename.equals("-"))
++		    is = System.in;
++		else
++		    is = BaseFont.getResourceStream(filename);
+                 if (is == null)
+                     throw new IOException(filename + " not found as file or resource.");
+                 try {

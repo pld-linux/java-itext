@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=iText Toolbox
+GenericName=PDF Utility
+Comment=A utility that allows to use a number of iText tools
+Exec=itext-toolbox
+Icon=itext-toolbox
+Terminal=false
+Type=Application
+Categories=Utility;

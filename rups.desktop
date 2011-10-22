@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=iText RUPS
+GenericName=Reading/Updating PDF Syntax
+Comment=a GUI application that allows you to look inside a PDF
+Exec=itext-rups
+Icon=itext-rups
+Terminal=false
+Type=Application
+Categories=Utility;
