@@ -12,7 +12,7 @@ License:	(LGPLv2+ or MPLv1.1) and ASL 2.0 and BSD and LGPLv2+
 Group:		Libraries/Java
 URL:		http://www.lowagie.com/iText/
 Source0:	http://downloads.sourceforge.net/itext/iText-src-%{version}.tar.gz
-# Source0-md5:	-
+# Source0-md5:	38c3d47e0f0a87a8151b5b2f208b461e
 Source3:	itext-rups.sh
 Source4:	itext-rups.desktop
 Source5:	itext-toolbox.sh
