@@ -4,6 +4,7 @@
 
 %define		srcname	iText
 %define		pname	itext
+%include	/usr/lib/rpm/macros.java
 Summary:	A Free Java-PDF library
 Name:		java-%{pname}
 Version:	2.1.7
@@ -44,12 +45,15 @@ BuildRequires:	ImageMagick
 BuildRequires:	ant
 BuildRequires:	bouncycastle-tsp
 BuildRequires:	desktop-file-utils
-BuildRequires:	dom4j
+BuildRequires:	java-dom4j
 BuildRequires:	jdk >= 1.7
 BuildRequires:	jpackage-utils
-BuildRequires:	jpackage-utils
 BuildRequires:	pdf-renderer
-BuildRequires:	rpmbuild(macros) >= 1.300
+BuildRequires:	rpm-javaprov
+BuildRequires:	rpmbuild(macros) >= 1.553
+%if %(locale -a | grep -q '^en_US$'; echo $?)
+BuildRequires:	glibc-localedb-all
+%endif
 Requires:	bouncycastle-tsp
 Requires:	java >= 1.5
 Requires:	jpackage-utils >= 1.5
@@ -119,16 +123,12 @@ API documentation for the iText package.
 %patch3 -p0
 
 # Remove preshipped binaries
-find -name "*.jar" | xargs rm -v
+find -name "*.jar" | xargs -r rm -v
 
 # Fix encoding issues
-sed 's/\r//' src/rups/com/lowagie/rups/view/icons/copyright_notice.txt > tmpfile
-touch -r src/rups/com/lowagie/rups/view/icons/copyright_notice.txt tmpfile
-mv -f tmpfile src/rups/com/lowagie/rups/view/icons/copyright_notice.txt
+%undos src/rups/com/lowagie/rups/view/icons/copyright_notice.txt
 
 install -d lib
-build-jar-repository -s -p lib bcprov bcmail bctsp pdf-renderer dom4j
-
 # Remove jdk & version numbers from classpath entries
 for file in src/ant/{*,.ant*}; do
 	for jarname in bcmail bcprov bctsp dom4j; do
@@ -144,9 +144,16 @@ sed -i 's|destdir|debug="on" destdir|g' src/ant/compile.xml
 sed -i 's|debug="true"||g' src/ant/compile.xml
 
 %build
-export CLASSPATH=$(build-classpath bcprov bcmail bctsp pdf-renderer dom4j)
+# source code not US-ASCII
+export LC_ALL=en_US
+
+#build-jar-repository -s -p lib bcprov bcmail bctsp pdf-renderer dom4j
+build-jar-repository -s -p lib dom4j
+
+#CLASSPATH=$(build-classpath bcprov bcmail bctsp pdf-renderer dom4j)
+CLASSPATH=$(build-classpath dom4j)
 cd src
-%ant jar jar.rups jar.rtf jar.toolbox %{with_javadoc:javadoc}
+%ant jar jar.rups jar.rtf jar.toolbox %{?with_javadoc:javadoc}
 
 %install
 rm -rf $RPM_BUILD_ROOT
