@@ -7,22 +7,22 @@
 # Conditional build:
 %bcond_without	javadoc		# don't build javadoc
 
-%define		srcname	iText
-%define		pname	itext
+%define		altname	iText
+%define		srcname	itext
 %include	/usr/lib/rpm/macros.java
 Summary:	A Free Java-PDF library
-Name:		java-%{pname}
+Name:		java-%{srcname}
 Version:	2.1.7
-Release:	2
+Release:	3
 License:	(LGPLv2+ or MPLv1.1) and ASL 2.0 and BSD and LGPLv2+
 Group:		Libraries/Java
 URL:		http://www.lowagie.com/iText/
 Source0:	http://downloads.sourceforge.net/itext/iText-src-%{version}.tar.gz
 # Source0-md5:	38c3d47e0f0a87a8151b5b2f208b461e
-Source3:	itext-rups.sh
-Source4:	itext-rups.desktop
-Source5:	itext-toolbox.sh
-Source6:	itext-toolbox.desktop
+Source3:	rups.sh
+Source4:	rups.desktop
+Source5:	toolbox.sh
+Source6:	toolbox.desktop
 Patch1:		pdftk.patch
 # Maven's Doxia plugin explicitly requires these XML output interfaces
 # of iText.  They were removed in iText 1.4.4 [1].  iText versions prior
@@ -45,7 +45,7 @@ Patch1:		pdftk.patch
 # http://www.1t3xt.com/about/history.php?branch=history.10&node=14
 # [2]
 # https://bugzilla.redhat.com/show_bug.cgi?id=236309
-Patch3:		itext-xmloutput.patch
+Patch3:		xmloutput.patch
 BuildRequires:	ImageMagick
 BuildRequires:	ant
 BuildRequires:	desktop-file-utils
@@ -163,33 +163,33 @@ rm -rf $RPM_BUILD_ROOT
 
 # jars
 install -d $RPM_BUILD_ROOT%{_javadir}
-cp -p lib/iText.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-%{version}.jar
+cp -p lib/%{altname}.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-%{version}.jar
 ln -s %{srcname}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}.jar
-cp -p lib/iText-rtf.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-rtf-%{version}.jar
+cp -p lib/%{altname}-rtf.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-rtf-%{version}.jar
 ln -s %{srcname}-rtf-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-rtf.jar
-cp -p lib/iText-rups.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-rups-%{version}.jar
+cp -p lib/%{altname}-rups.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-rups-%{version}.jar
 ln -s %{srcname}-rups-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-rups.jar
-cp -p lib/iText-toolbox.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-toolbox-%{version}.jar
+cp -p lib/%{altname}-toolbox.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-toolbox-%{version}.jar
 ln -s %{srcname}-toolbox-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-toolbox.jar
 
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_desktopdir}}
 # rups stuff
-install -p %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}/%{pname}-rups
+install -p %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}/%{srcname}-rups
 desktop-file-install \
       --dir=${RPM_BUILD_ROOT}%{_desktopdir} \
       %{SOURCE4}
 
 # toolbox stuff
-install -p %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}/%{pname}-toolbox
+install -p %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}/%{srcname}-toolbox
 desktop-file-install \
       --dir=${RPM_BUILD_ROOT}%{_desktopdir} \
       %{SOURCE6}
 
 # icon for rups and toolbox
 install -d $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/128x128/apps
-convert -resize 128x128 src/toolbox/com/lowagie/toolbox/1t3xt.gif %{pname}.png
-cp -p %{pname}.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/128x128/apps/%{pname}-rups.png
-cp -p %{pname}.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/128x128/apps/%{pname}-toolbox.png
+convert -resize 128x128 src/toolbox/com/lowagie/toolbox/1t3xt.gif %{srcname}.png
+cp -p %{srcname}.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/128x128/apps/%{srcname}-rups.png
+cp -p %{srcname}.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/128x128/apps/%{srcname}-toolbox.png
 
 # javadoc
 %if %{with javadoc}
@@ -232,18 +232,18 @@ ln -nfs %{srcname}-%{version} %{_javadocdir}/%{srcname}
 %doc src/rups/com/lowagie/rups/view/icons/copyright_notice.txt
 %{_javadir}/%{srcname}-rups.jar
 %{_javadir}/%{srcname}-rups-%{version}.jar
-%attr(755,root,root) %{_bindir}/%{pname}-rups
-%{_desktopdir}/%{pname}-rups.desktop
-%{_iconsdir}/hicolor/128x128/apps/%{pname}-rups.png
+%attr(755,root,root) %{_bindir}/%{srcname}-rups
+%{_desktopdir}/rups.desktop
+%{_iconsdir}/hicolor/128x128/apps/%{srcname}-rups.png
 
 %files toolbox
 %defattr(644,root,root,755)
 %doc src/toolbox/com/lowagie/toolbox/tools.txt
 %{_javadir}/%{srcname}-toolbox.jar
 %{_javadir}/%{srcname}-toolbox-%{version}.jar
-%attr(755,root,root) %{_bindir}/%{pname}-toolbox
-%{_desktopdir}/%{pname}-toolbox.desktop
-%{_iconsdir}/hicolor/128x128/apps/%{pname}-toolbox.png
+%attr(755,root,root) %{_bindir}/%{srcname}-toolbox
+%{_desktopdir}/toolbox.desktop
+%{_iconsdir}/hicolor/128x128/apps/%{srcname}-toolbox.png
 
 %if %{with javadoc}
 %files javadoc
