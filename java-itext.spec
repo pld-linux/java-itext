@@ -13,7 +13,7 @@
 Summary:	A Free Java-PDF library
 Name:		java-%{pname}
 Version:	2.1.7
-Release:	1
+Release:	2
 License:	(LGPLv2+ or MPLv1.1) and ASL 2.0 and BSD and LGPLv2+
 Group:		Libraries/Java
 URL:		http://www.lowagie.com/iText/
@@ -59,7 +59,6 @@ BuildRequires:	rpmbuild(macros) >= 1.553
 %if %(locale -a | grep -q '^en_US$'; echo $?)
 BuildRequires:	glibc-localedb-all
 %endif
-Requires:	java >= 1.5
 Requires:	java-bctsp
 Requires:	jpackage-utils >= 1.5
 BuildArch:	noarch
