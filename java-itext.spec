@@ -1,3 +1,8 @@
+# OTOD
+# - javadoc fetches from net:
+#  [javadoc] Constructing Javadoc information...
+#  [javadoc] javadoc: warning - Error fetching URL: http://www.dom4j.org/apidocs/package-list
+#  [javadoc] javadoc: warning - Error fetching URL: https://pdf-renderer.dev.java.net/nonav/demos/latest/javadoc/package-list
 #
 # Conditional build:
 %bcond_without	javadoc		# don't build javadoc
@@ -43,19 +48,19 @@ Patch1:		pdftk.patch
 Patch3:		itext-xmloutput.patch
 BuildRequires:	ImageMagick
 BuildRequires:	ant
-BuildRequires:	bouncycastle-tsp
 BuildRequires:	desktop-file-utils
+BuildRequires:	java-bctsp
 BuildRequires:	java-dom4j
-BuildRequires:	jdk >= 1.7
+BuildRequires:	java-pdf-renderer
+BuildRequires:	jdk >= 1.6
 BuildRequires:	jpackage-utils
-BuildRequires:	pdf-renderer
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.553
 %if %(locale -a | grep -q '^en_US$'; echo $?)
 BuildRequires:	glibc-localedb-all
 %endif
-Requires:	bouncycastle-tsp
 Requires:	java >= 1.5
+Requires:	java-bctsp
 Requires:	jpackage-utils >= 1.5
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -87,7 +92,7 @@ License:	LGPLv2+ and CC-BY
 Group:		X11/Applications
 Requires:	%{name} = %{version}-%{release}
 Requires:	java-dom4j
-Requires:	pdf-renderer
+Requires:	java-pdf-renderer
 
 %description rups
 iText RUPS is a tool that combines SUN's PDF Renderer (to view PDF
@@ -147,11 +152,9 @@ sed -i 's|debug="true"||g' src/ant/compile.xml
 # source code not US-ASCII
 export LC_ALL=en_US
 
-#build-jar-repository -s -p lib bcprov bcmail bctsp pdf-renderer dom4j
-build-jar-repository -s -p lib dom4j
+build-jar-repository -s -p lib bcprov bcmail bctsp pdf-renderer dom4j
 
-#CLASSPATH=$(build-classpath bcprov bcmail bctsp pdf-renderer dom4j)
-CLASSPATH=$(build-classpath dom4j)
+CLASSPATH=$(build-classpath bcprov bcmail bctsp pdf-renderer dom4j)
 cd src
 %ant jar jar.rups jar.rtf jar.toolbox %{?with_javadoc:javadoc}
 
@@ -191,7 +194,7 @@ cp -p %{pname}.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/128x128/apps/%{pname
 # javadoc
 %if %{with javadoc}
 install -d $RPM_BUILD_ROOT%{_javadocdir}/%{srcname}-%{version}
-cp -a build/docs/api/* $RPM_BUILD_ROOT%{_javadocdir}/%{srcname}-%{version}
+cp -a build/docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{srcname}-%{version}
 ln -s %{srcname}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{srcname} # ghost symlink
 %endif
 
@@ -203,8 +206,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun rups
 if [ $1 -eq 0 ] ; then
-    %update_icon_cache_post hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+	%update_icon_cache_post hicolor &>/dev/null
+	gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
 %posttrans rups
@@ -215,8 +218,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun toolbox
 if [ $1 -eq 0 ] ; then
-    %update_icon_cache_post hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+	%update_icon_cache_post hicolor &>/dev/null
+	gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
 %posttrans toolbox
@@ -239,8 +242,8 @@ ln -nfs %{srcname}-%{version} %{_javadocdir}/%{srcname}
 %files rups
 %defattr(644,root,root,755)
 %doc src/rups/com/lowagie/rups/view/icons/copyright_notice.txt
-%{_javadir}/%{pname}-rups.jar
-%{_javadir}/%{pname}-rups-%{version}.jar
+%{_javadir}/%{srcname}-rups.jar
+%{_javadir}/%{srcname}-rups-%{version}.jar
 %attr(755,root,root) %{_bindir}/%{pname}-rups
 %{_desktopdir}/%{pname}-rups.desktop
 %{_iconsdir}/hicolor/128x128/apps/%{pname}-rups.png
