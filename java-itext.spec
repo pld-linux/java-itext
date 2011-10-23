@@ -13,7 +13,7 @@
 Summary:	A Free Java-PDF library
 Name:		java-%{pname}
 Version:	2.1.7
-Release:	0.1
+Release:	1
 License:	(LGPLv2+ or MPLv1.1) and ASL 2.0 and BSD and LGPLv2+
 Group:		Libraries/Java
 URL:		http://www.lowagie.com/iText/
@@ -91,6 +91,7 @@ Summary:	Reading/Updating PDF Syntax
 License:	LGPLv2+ and CC-BY
 Group:		X11/Applications
 Requires:	%{name} = %{version}-%{release}
+Requires:	gtk-update-icon-cache
 Requires:	java-dom4j
 Requires:	java-pdf-renderer
 
@@ -104,7 +105,7 @@ Summary:	Some iText tools
 License:	MPLv1.1 or MIT
 Group:		X11/Applications
 Requires:	%{name} = %{version}-%{release}
-Requires:	jdk >= 1.5
+Requires:	gtk-update-icon-cache
 
 %description toolbox
 iText is a free open source Java-PDF library released on SF under the
@@ -202,28 +203,16 @@ ln -s %{srcname}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{srcname} # ghost sym
 rm -rf $RPM_BUILD_ROOT
 
 %post rups
-%update_icon_cache_post hicolor &>/dev/null || :
+%update_icon_cache hicolor
 
 %postun rups
-if [ $1 -eq 0 ] ; then
-	%update_icon_cache_post hicolor &>/dev/null
-	gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
-%posttrans rups
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%update_icon_cache hicolor
 
 %post toolbox
-%update_icon_cache_post hicolor &>/dev/null || :
+%update_icon_cache hicolor
 
 %postun toolbox
-if [ $1 -eq 0 ] ; then
-	%update_icon_cache_post hicolor &>/dev/null
-	gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
-%posttrans toolbox
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%update_icon_cache hicolor
 
 %post javadoc
 ln -nfs %{srcname}-%{version} %{_javadocdir}/%{srcname}
