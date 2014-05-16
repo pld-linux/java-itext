@@ -1,4 +1,5 @@
-# OTOD
+# TODO
+# - build jar.so (with gcj stuff) for pdftk
 # - javadoc fetches from net:
 #  [javadoc] Constructing Javadoc information...
 #  [javadoc] javadoc: warning - Error fetching URL: http://www.dom4j.org/apidocs/package-list
