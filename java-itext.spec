@@ -10,7 +10,6 @@
 
 %define		altname	iText
 %define		srcname	itext
-%include	/usr/lib/rpm/macros.java
 Summary:	A Free Java-PDF library
 Name:		java-%{srcname}
 Version:	2.1.7
